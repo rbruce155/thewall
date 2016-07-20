@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>TheWall</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/my_styles.css') }}">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	</head>
+	<body>
+	<!--div for alert msgs -->
+	<div class="alertTray">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert one-edge-shadow">
+              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                {{message}}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+     </div> 
+	<!-- TOP MENU -->
+	<div class="topMenu">
+		<div class="row">
+		  <div class="col-md-10"><p style="font-size:22px;padding-top:10px;"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> The Wall</p></div>
+		  <div class="col-md-2" style="padding-top:10px">
+		  	Welcome {{ name }}
+		  	<button style="margin-left:10px;" type="button" class="btn btn-info btn-sm" onclick="location.href='/logout';">log off</button>
+		  </div>
+		</div>
+	</div>
+	<!-- NEW POST FORM -->
+	<div class="postNew">
+		<h3>Post a message</h3>
+		<form action="/post" method="post" id="newPost">
+			<textarea name="newpost" form="newPost" rows="3" cols="10" placeholder="Today I ..."></textarea>
+		</form>
+		<div class="row">
+		  <div class="col-md-11"></div>
+		  <div class="col-md-1"><br><button type="button" class="btn btn-primary" onclick="document.getElementById('newPost').submit();">Post!</button></div>
+		</div>
+	</div>
+	<!-- POST FEED -->
+	<div class="postFeed">
+		{% for message in allUsrMessages %}
+			{% if message %}
+				<div class="message one-edge-shadow">
+					<div class="row">
+					  <div class="col-md-4"><h4><strong>{{ message['first_name'] }} {{ message['last_name'] }}</strong></h4></div>
+					  <div class="col-md-6"></div>
+					  <div class="col-md-2">{{ message['created_at'] }}</div>
+					</div>
+					<p>{{ message['message'] }}</p>
+					<!-- PRINT COMMENTS -->
+					{% for comment in allUsrComments %}
+						{% if comment['message_id'] == message['id'] %}
+							<div class="comment">
+								<div class="row">
+								  <div class="col-md-4"><p><strong>{{ comment['first_name'] }} {{ comment['last_name'] }}</strong></p></div>
+								<div class="col-md-5"></div>
+								<div class="col-md-3"><p style="float:right;">{{ comment['created_at'] }}</p></div>
+								</div>
+								<p style="padding-left:10px;padding-right:10px;">{{ comment['comment'] }}</p>
+							</div>
+						{% endif %}	
+					{% endfor %}	
+					<div class="row">
+					  <div class="col-md-10"></div>
+					  <div class="col-md-2" style="text-align:center;"><br><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal{{ message['id'] }}">
+					  Comment</button></div>
+					</div>
+				</div>
+				<!-- Comment Modal -->
+				<div class="modal fade" id="myModal{{ message['id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">Comment on {{ message['first_name'] }}'s post...</h4>
+				      </div>
+				      <div class="modal-body">
+				      	<button class="btn btn-default btn-xs" type="button" data-toggle="collapse" data-target="#collapse{{ message['id'] }}" aria-expanded="false" aria-controls="collapseExample">
+						  show/hide original post
+						</button><br>
+				      	<div class="collapse" id="collapse{{ message['id'] }}">
+					      		<p>{{ message['first_name'] }}'s post:</p>
+					      		<div class="originalPost">{{ message['message'] }}</div>	
+				      	</div>	
+			        	<div class="commentInput">
+							<form action="/comment/{{ message['id'] }}" method="post" id="commentForm{{ message['id'] }}">
+								<textarea name="commentTxt" form="commentForm{{ message['id'] }}" placeholder="comment here.."></textarea>
+							</form>
+						</div>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				        <button type="button" class="btn btn-primary" onclick="document.getElementById('commentForm{{ message['id'] }}').submit();">Submit</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			{% else %}
+				<div class="message">
+					<p>Sorry no messages yet!</p>	
+				</div>
+			{% endif %}
+		{% endfor %}		
+		
+	</div>
+
+
+
+	</body>
+		}
+</html>

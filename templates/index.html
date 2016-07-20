@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>The Wall</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/my_styles.css') }}">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	</head>
+	<body>
+	<!--div for alert msgs -->
+	<div class="alertTrayHome">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert one-edge-shadow">
+              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                {{message}}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+     </div>
+    <!-- login form -->
+	<div class="contain shadow">
+		<div class="welcomeLogo">
+			<h1><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> The Wall</h1>
+			<h6>Please login to continue</h6>
+		</div>
+		<div class="welcomeForm">	
+			<form action="/login" method="post" id="loginForm">
+				<div class="form-group">
+					Email: <input type="text" class="form-control" name="email">
+				</div>	
+				<div class="form-group">
+					Password: <input type="password" class="form-control" name="password">
+				</div>
+			</form>
+			<div class="moveRight">
+				<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
+				  Register
+				</button>
+				<button type="button" class="btn btn-primary" onclick="document.getElementById('loginForm').submit();">
+				  Log in
+				</button>
+			</div>
+		</div>	
+	</div>
+
+	<!-- Register Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog modal-sm" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Join the conversation at The Wall</h4>
+	      </div>
+	      <div class="modal-body">
+        	<div class="">
+				<form action="/register" method="post" id="registrationForm">
+					<div class="form-group">
+						First Name: <input type="text" class="form-control" name="first_name">
+					</div>
+					<div class="form-group">
+						Last Name: <input type="text" class="form-control" name="last_name">
+					</div>
+					<div class="form-group">
+						Email: <input type="text" class="form-control" name="email">
+					</div>
+					<div class="form-group">
+						Password: <input type="password" class="form-control" name="password">
+					</div>
+					<div class="form-group">
+						Confirm Password: <input type="password" class="form-control" name="confirm_password">
+					</div>
+				</form>
+			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" onclick="document.getElementById('registrationForm').submit();">Register</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+
+	</body>
+</html>
